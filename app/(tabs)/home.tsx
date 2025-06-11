@@ -31,8 +31,8 @@ export default function HomeScreen() {
             };
             loadFavorites();
 
-            return () => { }; // Cleanup opcional
-        }, []) // Dependências vazias = só executa quando a tela recebe foco
+            return () => { };
+        }, [])
     );
 
     useEffect(() => {
