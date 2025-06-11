@@ -1,12 +1,13 @@
 import { Text } from '@react-navigation/elements';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet } from 'react-native';
 import api from '../services/api';
+
 
 export default function HomeScreen() {
     const [products, setProducts] = useState<any>()
-    const navigation = useNavigation()
+    const navigation = useNavigation() as any
     
     useEffect(() => {
         const fetchProducts = async () => {
@@ -18,21 +19,23 @@ export default function HomeScreen() {
 
     function handleTouchProduct(productId: string) {
         console.log(productId)
+        console.log("a")
+
         navigation.navigate("Product", { productId: productId });
     }
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             {products?.map((product: any) => (
-                <View 
+                <Pressable 
                     key={product.id} 
                     style={styles.card}
-                    onTouchEnd={() => handleTouchProduct(product.id)}
+                    onPress={() => handleTouchProduct(product.id)}
                 >
                     <Image source={{ uri: product.image }} style={styles.image} />
                     <Text style={styles.title}>{product.title}</Text>
                     <Text style={styles.price}>${product.price}</Text>
-                </View>
+                </Pressable>
             ))}
         </ScrollView>
     );

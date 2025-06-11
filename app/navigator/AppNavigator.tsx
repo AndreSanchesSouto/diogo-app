@@ -7,7 +7,7 @@ import ProductScreen from '../(tabs)/product';
 export type RootStackParamList = {
     Login: undefined;
     Home: undefined;
-    ProductDetails: { productId: string };
+    Product: { productId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
