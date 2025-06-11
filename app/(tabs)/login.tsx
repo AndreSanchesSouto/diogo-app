@@ -49,11 +49,6 @@ export default function LoginScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.container}
         >
-            {/* <Image
-        source={require('./assets/logo.png')} // Altere para o caminho da sua logo
-        style={styles.logo}
-      /> */}
-
             <Text style={styles.title}>Faça seu login</Text>
 
             <View style={styles.inputContainer}>

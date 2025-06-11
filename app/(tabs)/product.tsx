@@ -1,10 +1,13 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { RouteProp } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
+import { Star } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     Dimensions,
     Image,
+    Pressable,
     ScrollView,
     StyleSheet,
     Text,
@@ -28,10 +31,23 @@ interface Product {
     };
 }
 
+const checkIsFavorite = async (itemId: number): Promise<boolean> => {
+    try {
+        const favoritesString = await AsyncStorage.getItem('favorites');
+        if (!favoritesString) return false;
+
+        const favorites: string[] = JSON.parse(favoritesString);
+        return favorites.includes(String(itemId));
+    } catch (error) {
+        console.error('Erro ao verificar favoritos:', error);
+        return false;
+    }
+};
+
 export default function ProductScreen() {
     const route = useRoute<ProductRouteProp>();
     const { productId } = route.params;
-
+    const [isFavorite, setIsFavorite] = useState(false);
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -46,9 +62,18 @@ export default function ProductScreen() {
                 setLoading(false);
             }
         };
-
         fetchProduct();
     }, [productId]);
+
+    useEffect(() => {
+        if (product && product.id) {
+            const checkFavorite = async () => {
+                const favoriteStatus = await checkIsFavorite(product.id);
+                setIsFavorite(favoriteStatus);
+            };
+            checkFavorite();
+        }
+    }, [product])
 
     if (loading) {
         return (
@@ -66,8 +91,48 @@ export default function ProductScreen() {
         );
     }
 
+
+    function toggleFavorite(itemId: number) {
+        AsyncStorage.getItem('favorites')
+            .then(favoritesString => {
+                let favorites: string[] = [];
+                
+                if (favoritesString) {
+                    favorites = JSON.parse(favoritesString);
+                }
+                
+                const itemIdStr = String(itemId);
+                const index = favorites.indexOf(itemIdStr);
+                
+                if (index === -1) {
+                    favorites.push(itemIdStr);
+                    setIsFavorite(true);
+                } else {
+                    favorites.splice(index, 1);
+                    setIsFavorite(false);
+                }
+                
+                return AsyncStorage.setItem('favorites', JSON.stringify(favorites));
+            })
+            .catch(error => {
+                console.error("Erro ao alternar favorito:", error);
+            });
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Pressable
+                style={styles.favoriteButton}
+                onPress={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(product.id);
+                }}
+            >
+                <Star
+                    fill={isFavorite ? "#FFD700" : "transparent"}
+                    color={isFavorite ? "#FFD700" : "#000"}
+                />
+            </Pressable>
             <Image source={{ uri: product.image }} style={styles.image} />
 
             <View style={styles.content}>
@@ -96,6 +161,13 @@ const styles = StyleSheet.create({
         paddingBottom: 32,
         backgroundColor: '#fff',
         alignItems: 'center',
+    },
+    favoriteButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 1,
+        padding: 8,
     },
     centered: {
         flex: 1,
