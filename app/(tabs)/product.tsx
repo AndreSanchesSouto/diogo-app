@@ -1,13 +1,12 @@
 import { Text } from '@react-navigation/elements';
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import api from '../services/api';
 
-export default function HomeScreen() {
+export default function ProductScreen() {
+
     const [products, setProducts] = useState<any>()
-    const navigation = useNavigation()
-    
+
     useEffect(() => {
         const fetchProducts = async () => {
             const response = await api.get("/products")
@@ -18,7 +17,6 @@ export default function HomeScreen() {
 
     function handleTouchProduct(productId: string) {
         console.log(productId)
-        navigation.navigate("Product", { productId: productId });
     }
 
     return (

@@ -2,8 +2,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../(tabs)/home';
 import LoginScreen from '../(tabs)/login';
+import ProductScreen from '../(tabs)/product';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+    Login: undefined;
+    Home: undefined;
+    ProductDetails: { productId: string };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function AppNavigator() {
     return (
@@ -12,12 +19,22 @@ export function AppNavigator() {
                     <Stack.Screen
                         name="Login"
                         component={LoginScreen}
+                        options={{
+                            headerShown: false
+                        }}
                     />
                     <Stack.Screen
                         name="Home"
                         component={HomeScreen}
                         options={{
-                            title: 'Minha App',
+                            title: 'Início',
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Product"
+                        component={ProductScreen}
+                        options={{
+                            title: 'Produto',
                         }}
                     />
                 </Stack.Navigator>

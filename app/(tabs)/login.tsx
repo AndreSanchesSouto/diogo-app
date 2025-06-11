@@ -92,15 +92,6 @@ export default function LoginScreen() {
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
-
-            <View style={styles.footer}>
-                <TouchableOpacity>
-                    <Text style={styles.footerText}>Esqueci minha senha</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={goToSignup}>
-                    <Text style={styles.footerText}>Criar conta</Text>
-                </TouchableOpacity>
-            </View>
         </KeyboardAvoidingView>
     );
 }
